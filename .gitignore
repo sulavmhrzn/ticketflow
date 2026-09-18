@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Env
+.env
+
+# Keys
+keys/
+
+# Django
+*.sqlite3
+staticfiles/
+
+# uv
+.venv/
