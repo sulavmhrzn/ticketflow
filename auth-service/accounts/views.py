@@ -1,3 +1,10 @@
+import json
+
+from cryptography.hazmat.primitives import serialization
+from django.conf import settings
+from django.http import JsonResponse
+from django.views import View
+from jwt.algorithms import RSAAlgorithm
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -72,3 +79,15 @@ class ResendOTPView(APIView):
             },
             status=200,
         )
+
+
+class JWKSView(View):
+    def get(self, request):
+        public_key_pem = (settings.BASE_DIR / "keys" / "public.pem").read_text()
+        public_key = serialization.load_pem_public_key(public_key_pem.encode())
+
+        jwk_json = json.loads(RSAAlgorithm.to_jwk(public_key))
+        jwk_json["use"] = "sig"
+        jwk_json["alg"] = "RS256"
+        jwk_json["kid"] = "auth-key-1"
+        return JsonResponse({"keys": [jwk_json]})

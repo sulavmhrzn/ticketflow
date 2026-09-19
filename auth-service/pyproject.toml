@@ -11,6 +11,7 @@ dependencies = [
     "djangorestframework>=3.18.1",
     "djangorestframework-simplejwt>=5.5.1",
     "psycopg[binary]>=3.3.5",
+    "pyjwt[crypto]>=2.14.0",
     "python-dotenv>=1.2.3",
     "ruff>=0.16.7",
 ]
@@ -25,3 +26,6 @@ dev = [
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings"
 python_files = ["test_*.py"]
+
+[tool.ruff.lint]
+ignore = ['RUF012']
