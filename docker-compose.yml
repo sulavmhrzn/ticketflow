@@ -18,6 +18,7 @@ services:
       timeout: 5s
       retries: 5
 
+  # ------------- Auth services -------------  
   auth-db:
     image: postgres:17-alpine
     env_file:
@@ -90,7 +91,68 @@ services:
     volumes:
       - ./auth-service:/app
       - /app/.venv
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/.well-known/jwks.json')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ------------- Catalog services -------------  
+  catalog-db:
+    image: postgres:17-alpine
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${CATALOG_POSTGRES_DB}
+      POSTGRES_USER: ${CATALOG_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${CATALOG_POSTGRES_PASSWORD}
+    volumes:
+      - catalog_db_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${CATALOG_POSTGRES_USER} -d ${CATALOG_POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      
+  catalog-migrate:
+    build: ./catalog-service
+    env_file: .env
+    environment:
+      CATALOG_POSTGRES_HOST: catalog-db
+      CATALOG_POSTGRES_PORT: "5432"
+      AUTH_SERVICE_URL: http://auth:8000
+    command: ["uv", "run", "python", "manage.py", "migrate"]
+    depends_on:
+      catalog-db:
+        condition: service_healthy
+      auth:
+        condition: service_healthy
+    restart: "no"
+
+  catalog:
+    build: ./catalog-service
+    env_file: .env
+    environment:
+      CATALOG_POSTGRES_HOST: catalog-db
+      CATALOG_POSTGRES_PORT: "5432"
+      AUTH_SERVICE_URL: http://auth:8000
+    ports:
+      - "8001:8001"
+    depends_on:
+      catalog-db:
+        condition: service_healthy
+      auth:
+        condition: service_healthy
+      catalog-migrate:
+        condition: service_completed_successfully
+    volumes:
+      - ./catalog-service:/app
+      - /app/.venv
 
 volumes:
   auth_db_data:
   rabbitmq_data:
+  catalog_db_data:

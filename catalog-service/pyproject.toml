@@ -1,0 +1,23 @@
+[project]
+name = "catalog-service"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "cryptography>=50.0.1",
+    "django>=6.1.1",
+    "djangorestframework>=3.18.1",
+    "djangorestframework-simplejwt>=5.5.1",
+    "psycopg[binary]>=3.3.5",
+    "python-dotenv>=1.2.3",
+    "requests>=2.34.2",
+]
+
+[dependency-groups]
+dev = [
+    "factory-boy>=3.3.3",
+    "pytest>=9.1.1",
+    "pytest-django>=4.14.0",
+    "ruff>=0.16.8",
+]
