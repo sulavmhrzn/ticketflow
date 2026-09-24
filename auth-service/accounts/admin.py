@@ -23,6 +23,7 @@ class UserAdmin(BaseUserAdmin):
                 "fields": (
                     "first_name",
                     "last_name",
+                    "role",
                 )
             },
         ),

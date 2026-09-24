@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "venues",
 ]
 
 MIDDLEWARE = [
@@ -131,4 +132,10 @@ AUTH_SERVICE_JWKS_URL = (
 SIMPLE_JWT = {
     "ALGORITHM": "RS256",
     "VERIFYING_KEY": fetch_verifying_key(AUTH_SERVICE_JWKS_URL),
+}
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "config.authentication.ClaimsBasedJWTAuthentication",
+    ],
 }

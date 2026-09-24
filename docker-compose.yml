@@ -79,6 +79,7 @@ services:
     environment:
       AUTH_POSTGRES_HOST: auth-db
       AUTH_POSTGRES_PORT: "5432"
+      PYTHONUNBUFFERED: "1"
     ports:
       - "8000:8000"
     depends_on:
@@ -139,6 +140,7 @@ services:
       CATALOG_POSTGRES_HOST: catalog-db
       CATALOG_POSTGRES_PORT: "5432"
       AUTH_SERVICE_URL: http://auth:8000
+      PYTHONUNBUFFERED: "1"
     ports:
       - "8001:8001"
     depends_on:

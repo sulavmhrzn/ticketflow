@@ -1,0 +1,18 @@
+{
+    "folders": [
+        {
+            "name": "🔑 auth-service",
+            "path": "auth-service"
+        },
+        {
+            "name": "📋 catalog-service",
+            "path": "catalog-service"
+        }
+    ],
+    "settings": {
+        "files.exclude": {
+            "**/__pycache__": true,
+            "**/*.pyc": true
+        }
+    },
+}
